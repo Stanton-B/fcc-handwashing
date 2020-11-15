@@ -1,20 +1,26 @@
 <script>
+  /* imports */
+  import { createEventDispatcher } from "svelte";
   import ProgressBar from "./ProgressBar.svelte";
+
+  /* vars */
   const totalSeconds = 20;
   let secondsLeft = totalSeconds;
   let isRunning = false;
-  $: progress = 0;
+  /* $: progress = 100 - (100 / totalSeconds) * secondsLeft; */
+  $: progress = ((totalSeconds - secondsLeft) / totalSeconds) * 100;
+  const dispatch = createEventDispatcher();
+
+  /* funcs */
   function startTimer() {
     isRunning = true;
     const timer = setInterval(() => {
       secondsLeft -= 1;
-      /* progress = 100 - (100 / totalSeconds) * secondsLeft; */
-      progress = ((totalSeconds - secondsLeft) / totalSeconds) * 100;
       if (secondsLeft == 0) {
         clearInterval(timer);
         isRunning = false;
         secondsLeft = totalSeconds;
-        progress = 0;
+        dispatch("end");
       }
     }, 1000);
   }
