@@ -4,10 +4,9 @@
   import Timer2Tween from "./Timer2Tween.svelte";
 
   let audio;
-  /* function timerEnds() { */
-  /*   /1* audio.play(); *1/ */
-  /*   console.log("END TIMER!"); */
-  /* } */
+  function timerEnds() {
+    audio.play();
+  }
 </script>
 
 <style>
@@ -17,10 +16,22 @@
   }
 </style>
 
-<h1>Handwashing App</h1>
-<Timer2Tween />
+<h1>Handwashing App (Store & Tweened Async Progress Bar Version)</h1>
+<Timer2Tween on:end={timerEnds} />
 <HowTo />
 
+<h1>Handwashing App (Original Tutorial Version)</h1>
+<Timer on:end={timerEnds} />
+<HowTo />
+<h3>
+  <a href="https://www.who.int/gpsc/clean_hands_protection/en/">
+    Picture Source
+  </a>
+
+  <a href="https://freesound.org/people/metrostock99/sounds/345086/ ">
+    Sound Source
+  </a>
+</h3>
 <audio bind:this={audio}>
   <track kind="captions" />
   <source src="sound.wav" />

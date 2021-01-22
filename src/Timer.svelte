@@ -6,7 +6,6 @@
   const totalSeconds = 3;
   let secondsLeft = totalSeconds;
   let isRunning = false;
-  /* $: progress = 100 - (100 / totalSeconds) * secondsLeft; */
   $: progress = ((totalSeconds - secondsLeft) / totalSeconds) * 100;
   const dispatch = createEventDispatcher();
 
@@ -20,6 +19,7 @@
         isRunning = false;
         secondsLeft = totalSeconds;
         dispatch("end");
+        console.log("Timer1 Complete");
       }
     }, 1000);
   }
