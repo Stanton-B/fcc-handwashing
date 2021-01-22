@@ -12,7 +12,7 @@
   let paused = false;
   let resetDuration = 400;
   // seconds for the timer
-  let seconds = 2;
+  let seconds = 20;
 
   // We make this reactive($:) because when `seconds` changes, this needs to
   // recompute.

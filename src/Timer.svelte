@@ -3,7 +3,7 @@
   import ProgressBar from "./ProgressBar.svelte";
 
   /* vars */
-  const totalSeconds = 3;
+  const totalSeconds = 20;
   let secondsLeft = totalSeconds;
   let isRunning = false;
   $: progress = ((totalSeconds - secondsLeft) / totalSeconds) * 100;
