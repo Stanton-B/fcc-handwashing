@@ -536,7 +536,7 @@ var app = (function () {
     	};
     }
 
-    const totalSeconds = 3;
+    const totalSeconds = 20;
 
     function instance$1($$self, $$props, $$invalidate) {
     	let secondsLeft = totalSeconds;
@@ -953,7 +953,7 @@ var app = (function () {
     	let paused = false;
 
     	// seconds for the timer
-    	let seconds = 2;
+    	let seconds = 20;
 
     	// set progress to 0 (tweening for the period computed in the milliseconds variable).
     	async function start() {
