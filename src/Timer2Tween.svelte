@@ -1,42 +1,33 @@
 <script>
   import { createEventDispatcher } from "svelte";
-
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
 
-  /* For talking to the parent App.svelte */
   const dispatch = createEventDispatcher();
-
-  // track whether the timer is in progress
   let isRunning = false;
   let paused = false;
   let resetDuration = 400;
-  // seconds for the timer
   let seconds = 20;
-
-  // We make this reactive($:) because when `seconds` changes, this needs to
-  // recompute.
   $: milliseconds = seconds * 1000;
-
-  // Tying the duration to `milliseconds` and making the assignment reactive
-  // ($:) allows to change value
   $: progressStore = tweened(seconds, {
     duration: milliseconds,
   });
 
-  // set progress to 0 (tweening for the period computed in the milliseconds variable).
-  async function start() {
+  async function start(time) {
     paused = false;
     isRunning = true;
-    await progressStore.set(0);
-    // then, when timer reaches 0
-    progressStore.set(seconds, { duration: resetDuration, easing: cubicOut });
-    isRunning = false;
-    console.log("Timer2 Complete");
-    dispatch("end");
+    while (!paused && isRunning) {
+      let timerDuration = time <= 1 ? 1 : Math.round(time) * 1000;
+      await progressStore.set(0, { duration: timerDuration });
+      console.log("Timer2 Complete");
+      dispatch("end");
+      reset();
+      return;
+    }
+    return;
   }
 
-  function stop() {
+  function reset() {
     paused = false;
     isRunning = false;
     progressStore.set(seconds, { duration: resetDuration, easing: cubicOut });
@@ -44,13 +35,10 @@
 
   function pause() {
     if (paused) {
-      start();
+      start($progressStore);
     } else {
       paused = true;
-      progressStore.set($progressStore, {
-        duration: resetDuration,
-        easing: cubicOut,
-      });
+      progressStore.set($progressStore, { duration: 0 });
     }
   }
 </script>
@@ -80,7 +68,7 @@
 <div bp="grid">
   <h2 bp="offset-5@md 4@md 12@sm">
     Seconds Left:
-    {$progressStore < 10 ? `0${Math.floor($progressStore)}` : `${Math.floor($progressStore)}`}
+    {$progressStore < 9.5 ? `0${Math.round($progressStore)}` : `${Math.round($progressStore)}`}
   </h2>
 </div>
 
@@ -90,7 +78,7 @@
     <input
       type="range"
       bind:value={seconds}
-      on:change={stop}
+      on:change={reset}
       min="1"
       max="60" />
   </div>
@@ -98,9 +86,9 @@
 
 <div bp="grid">
   {#if !isRunning || paused}
-    <button bp="offset-5@md 4@md 12@sm" on:click={start}>⏱ Start</button>
+    <button bp="offset-5@md 4@md 12@sm" on:click={start($progressStore)}>⏱ Start</button>
   {:else}
     <button bp="offset-5@md 4@md 12@sm" on:click={pause}>⏸ Pause</button>
   {/if}
-  <button bp="offset-5@md 4@md 12@sm" on:click={stop}>♻ Reset</button>
+  <button bp="offset-5@md 4@md 12@sm" on:click={reset}>♻ Reset</button>
 </div>
